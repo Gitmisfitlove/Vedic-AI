@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../utils/cn';
@@ -6,12 +6,15 @@ import { cn } from '../utils/cn';
 interface AdvancedTimePickerProps {
     value: string;
     onChange: (val: string) => void;
+    onKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
-export const AdvancedTimePicker = ({ value, onChange }: AdvancedTimePickerProps) => {
+export const AdvancedTimePicker = forwardRef<HTMLInputElement, AdvancedTimePickerProps>(({ value, onChange, onKeyDown }, ref) => {
     const [showPicker, setShowPicker] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const internalInputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => internalInputRef.current as HTMLInputElement);
 
     // Internal state for popup selection
     const [selectedHour, setSelectedHour] = useState(10);
@@ -122,7 +125,7 @@ export const AdvancedTimePicker = ({ value, onChange }: AdvancedTimePickerProps)
         <div className="relative" ref={wrapperRef}>
             <div className="relative">
                 <input
-                    ref={inputRef}
+                    ref={internalInputRef}
                     required
                     type="text"
                     className="w-full bg-[#1e293b] border border-[#334155] rounded-lg p-3 text-[#f8fafc] focus:ring-2 focus:ring-[#2563eb] outline-none transition-all placeholder:text-[#94a3b8]"
@@ -130,6 +133,7 @@ export const AdvancedTimePicker = ({ value, onChange }: AdvancedTimePickerProps)
                     value={value}
                     onChange={handleInput}
                     onFocus={() => setShowPicker(true)}
+                    onKeyDown={onKeyDown}
                 />
                 <button
                     type="button"
@@ -236,4 +240,6 @@ export const AdvancedTimePicker = ({ value, onChange }: AdvancedTimePickerProps)
             </AnimatePresence>
         </div>
     );
-};
+});
+
+AdvancedTimePicker.displayName = "AdvancedTimePicker";

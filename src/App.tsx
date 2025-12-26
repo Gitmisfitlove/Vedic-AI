@@ -64,7 +64,14 @@ const Starfield = () => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     };
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouseRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove);
 
     const animate = () => {
       ctx.fillStyle = '#020617'; // Deep space background
@@ -109,6 +116,7 @@ const Starfield = () => {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
@@ -500,6 +508,12 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // References for Focus Management
+  const nameRef = useRef<HTMLInputElement>(null);
+  const dobRef = useRef<HTMLInputElement>(null);
+  const tobRef = useRef<HTMLInputElement>(null);
+  const locationRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
@@ -515,6 +529,15 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
     };
     fetchProfiles();
   }, []);
+
+  // Keyboard Navigation Handler
+  // Keyboard Navigation Handler
+  const handleKeyDown = (e: React.KeyboardEvent, nextRef: any) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      nextRef?.current?.focus();
+    }
+  };
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
@@ -680,11 +703,14 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
               <User className="w-4 h-4" /> Name
             </label>
             <input
+              ref={nameRef}
+              autoFocus
               required
               className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl p-3.5 text-slate-200 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all placeholder:text-slate-500 hover:border-blue-500/30"
               placeholder="Arjun Sharma"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onKeyDown={(e) => handleKeyDown(e, dobRef)}
             />
           </div>
           <div className="space-y-2">
@@ -698,28 +724,34 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
             <label className="text-sm font-medium text-[#94a3b8] flex items-center gap-2">
               <Calendar className="w-4 h-4" /> Date of Birth
             </label>
-            <CustomDatePicker
-              value={formData.dob}
-              onChange={(val) => setFormData({ ...formData, dob: val })}
-            />
+            <div ref={dobRef} tabIndex={-1} className="outline-none" onKeyDown={(e) => handleKeyDown(e, tobRef)}>
+              <CustomDatePicker
+                value={formData.dob}
+                onChange={(val) => setFormData({ ...formData, dob: val })}
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-[#94a3b8] flex items-center gap-2">
               <Clock className="w-4 h-4" /> Time of Birth
             </label>
             <AdvancedTimePicker
+              ref={tobRef}
               value={formData.tob}
               onChange={(val) => setFormData({ ...formData, tob: val })}
+              onKeyDown={(e) => handleKeyDown(e, locationRef)}
             />
           </div>
           <div className="md:col-span-2 space-y-2">
             <label className="text-sm font-medium text-[#94a3b8] flex items-center gap-2">
               <MapPin className="w-4 h-4" /> Birth Location
             </label>
-            <LocationInput
-              value={formData.location}
-              onChange={(val, lat, lon) => setFormData({ ...formData, location: val, lat, lon })}
-            />
+            <div ref={locationRef} tabIndex={-1} className="outline-none">
+              <LocationInput
+                value={formData.location}
+                onChange={(val, lat, lon) => setFormData({ ...formData, location: val, lat, lon })}
+              />
+            </div>
           </div>
         </div>
 
