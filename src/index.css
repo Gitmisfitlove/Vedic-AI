@@ -4,14 +4,21 @@
 
 :root {
   /* Professional Palette (Practo-inspired) */
-  --color-bg-primary: #0f172a; /* Slate 900 */
-  --color-bg-secondary: #1e293b; /* Slate 800 */
-  --color-accent: #2563eb; /* Royal Blue */
-  --color-accent-hover: #1d4ed8; /* Darker Blue */
-  --color-text-primary: #f8fafc; /* Slate 50 */
-  --color-text-secondary: #94a3b8; /* Slate 400 */
-  --color-border: #334155; /* Slate 700 */
-  
+  --color-bg-primary: #0f172a;
+  /* Slate 900 */
+  --color-bg-secondary: #1e293b;
+  /* Slate 800 */
+  --color-accent: #2563eb;
+  /* Royal Blue */
+  --color-accent-hover: #1d4ed8;
+  /* Darker Blue */
+  --color-text-primary: #f8fafc;
+  /* Slate 50 */
+  --color-text-secondary: #94a3b8;
+  /* Slate 400 */
+  --color-border: #334155;
+  /* Slate 700 */
+
   --font-sans: 'Inter', sans-serif;
 }
 
@@ -25,13 +32,26 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-primary); 
+  background: var(--color-bg-primary);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border); 
+  background: var(--color-border);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent); 
+  background: var(--color-accent);
+}
+
+/* Utilities */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

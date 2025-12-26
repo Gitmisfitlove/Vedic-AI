@@ -31,6 +31,7 @@ import { calculateKundali, getSignName } from './engine/astroEngine';
 import { cn } from './utils/cn';
 import { db } from './config/firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { AdvancedTimePicker } from './components/AdvancedTimePicker';
 
 
 
@@ -198,94 +199,7 @@ const SegmentedGender = ({ value, onChange }: { value: 'male' | 'female' | 'othe
   );
 };
 
-const HybridTimePicker = ({ value, onChange }: { value: string, onChange: (val: string) => void }) => {
-  const [showPicker, setShowPicker] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setShowPicker(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
-  };
-
-  const generateTime = (h: number, m: number, ampm: string) => {
-    return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
-  };
-
-  return (
-    <div className="relative" ref={wrapperRef}>
-      <input
-        required
-        type="text"
-        className="w-full bg-[#1e293b] border border-[#334155] rounded-lg p-3 text-[#f8fafc] focus:ring-2 focus:ring-[#2563eb] outline-none transition-all placeholder:text-[#94a3b8]"
-        placeholder="10:00 AM"
-        value={value}
-        onChange={handleChange}
-        onFocus={() => setShowPicker(true)}
-      />
-      <Clock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#94a3b8]" />
-
-      <AnimatePresence>
-        {showPicker && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="absolute z-50 w-72 mt-2 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl shadow-black/50 p-4 right-0 flex gap-4"
-          >
-            {/* Hours */}
-            <div className="flex-1 h-48 overflow-y-auto custom-scrollbar">
-              <div className="text-[10px] text-[#94a3b8] mb-1 text-center uppercase tracking-wider font-bold">Hour</div>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(h => (
-                <button key={h} type="button"
-                  className="w-full py-1 text-sm text-[#e2e8f0] hover:bg-[#2563eb]/20 rounded mb-1 transition-colors"
-                  onClick={() => onChange(generateTime(h, parseInt(value.split(':')[1] || '0'), value.includes('PM') ? 'PM' : 'AM'))}
-                >
-                  {h}
-                </button>
-              ))}
-            </div>
-            {/* Minutes */}
-            <div className="flex-1 h-48 overflow-y-auto custom-scrollbar">
-              <div className="text-[10px] text-[#94a3b8] mb-1 text-center uppercase tracking-wider font-bold">Min</div>
-              {Array.from({ length: 60 }, (_, i) => i).map(m => (
-                <button key={m} type="button"
-                  className="w-full py-1 text-sm text-[#e2e8f0] hover:bg-[#2563eb]/20 rounded mb-1 transition-colors"
-                  onClick={() => {
-                    const [hStr] = value.split(':');
-                    const h = parseInt(hStr) || 12;
-                    onChange(generateTime(h, m, value.includes('PM') ? 'PM' : 'AM'))
-                  }}
-                >
-                  {m.toString().padStart(2, '0')}
-                </button>
-              ))}
-            </div>
-            {/* AM/PM */}
-            <div className="flex flex-col gap-2 justify-center border-l border-white/5 pl-2">
-              {['AM', 'PM'].map(p => (
-                <button key={p} type="button"
-                  className={cn("px-2 py-1 rounded text-xs font-bold transition-all", value.includes(p) ? "bg-[#2563eb] text-white shadow-lg" : "bg-[#0f172a] text-[#94a3b8] hover:bg-white/5")}
-                  onClick={() => onChange(value.replace(/AM|PM/g, p).trim() || `12:00 ${p}`)}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
+// Removed inline HybridTimePicker in favor of AdvancedTimePicker component
 
 interface LocationInputProps {
   value: string;
@@ -793,7 +707,7 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
             <label className="text-sm font-medium text-[#94a3b8] flex items-center gap-2">
               <Clock className="w-4 h-4" /> Time of Birth
             </label>
-            <HybridTimePicker
+            <AdvancedTimePicker
               value={formData.tob}
               onChange={(val) => setFormData({ ...formData, tob: val })}
             />
