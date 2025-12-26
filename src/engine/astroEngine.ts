@@ -5,7 +5,7 @@ import {
     Body,
     SiderealTime
 } from 'astronomy-engine';
-import type { BirthDetails, KundaliData, PlanetData, Dosha } from '../types';
+import type { BirthDetails, KundaliData, PlanetData, Dosha, TransitData } from '../types';
 
 // --- CONSTANTS ---
 const ZODIAC_SIGNS = [
@@ -236,7 +236,7 @@ export const calculateTransits = (date: Date): TransitData[] => {
         if (body === Body.Saturn) stepDays = 10;
 
         let daysRemaining = 0;
-        let searchTime = date;
+        // let searchTime = date;
         let maxIter = 1000; // Safety break
 
         // Simple forward march until sign changes (Not theoretically perfect but robust for UI)
@@ -271,7 +271,7 @@ export const calculateTransits = (date: Date): TransitData[] => {
 
             daysRemaining += stepDays;
             // Increment time
-            const nextMs = jumpTime.getTime() + (i * stepDays * 86400000); // Wait, logic error in loop increment.
+            // const nextMs = jumpTime.getTime() + (i * stepDays * 86400000); // Wait, logic error in loop increment.
             // Fix: accumulate correctly
             // Simple iterative approach w/o accumulation error:
             const d = new Date(date.getTime() + daysRemaining * 86400000);

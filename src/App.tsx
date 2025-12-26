@@ -4,7 +4,7 @@ import {
   ChevronDown,
   MapPin,
   LayoutDashboard,
-  Sun,
+  // Sun,
   Activity,
   Clock,
   Brain,
@@ -869,44 +869,44 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
   );
 };
 
-const SouthIndianChart = ({ planets, title }: { planets: any[], title: string }) => {
-  // Mapping for South Indian chart layout (clockwise from Pisces/Top-Left)
-  const layout = [
-    11, 0, 1, 2,
-    10, null, null, 3,
-    9, null, null, 4,
-    8, 7, 6, 5
-  ];
+// const SouthIndianChart = ({ planets, title }: { planets: any[], title: string }) => {
+//   // Mapping for South Indian chart layout (clockwise from Pisces/Top-Left)
+//   const layout = [
+//     11, 0, 1, 2,
+//     10, null, null, 3,
+//     9, null, null, 4,
+//     8, 7, 6, 5
+//   ];
 
-  return (
-    <div className="bg-slate-900/50 backdrop-blur-md p-4 rounded-xl border border-slate-700/50 shadow-lg">
-      <h3 className="text-center text-blue-400 font-bold mb-4 uppercase tracking-wider flex items-center justify-center gap-2">
-        <Sparkles className="w-4 h-4" /> {title}
-      </h3>
-      <div className="grid grid-cols-4 gap-1 aspect-square w-full max-w-[400px] mx-auto">
-        {layout.map((signIdx, i) => {
-          if (signIdx === null) return <div key={i} className="bg-transparent" />;
+//   return (
+//     <div className="bg-slate-900/50 backdrop-blur-md p-4 rounded-xl border border-slate-700/50 shadow-lg">
+//       <h3 className="text-center text-blue-400 font-bold mb-4 uppercase tracking-wider flex items-center justify-center gap-2">
+//         <Sparkles className="w-4 h-4" /> {title}
+//       </h3>
+//       <div className="grid grid-cols-4 gap-1 aspect-square w-full max-w-[400px] mx-auto">
+//         {layout.map((signIdx, i) => {
+//           if (signIdx === null) return <div key={i} className="bg-transparent" />;
 
-          const signNum = signIdx + 1;
-          const housePlanets = planets.filter(p => p.sign === signNum);
+//           const signNum = signIdx + 1;
+//           const housePlanets = planets.filter(p => p.sign === signNum);
 
-          return (
-            <div key={i} className="border border-[#334155] flex flex-col items-center justify-center p-1 min-h-[60px] relative bg-[#0f172a]">
-              <span className="absolute top-0.5 right-1 text-[10px] text-[#94a3b8] font-mono">{signNum}</span>
-              <div className="flex flex-wrap justify-center gap-1">
-                {housePlanets.map(p => (
-                  <span key={p.name} className="text-[10px] md:text-xs font-bold text-[#f8fafc]" title={p.name}>
-                    {p.name.substring(0, 2)}
-                  </span>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+//           return (
+//             <div key={i} className="border border-[#334155] flex flex-col items-center justify-center p-1 min-h-[60px] relative bg-[#0f172a]">
+//               <span className="absolute top-0.5 right-1 text-[10px] text-[#94a3b8] font-mono">{signNum}</span>
+//               <div className="flex flex-wrap justify-center gap-1">
+//                 {housePlanets.map(p => (
+//                   <span key={p.name} className="text-[10px] md:text-xs font-bold text-[#f8fafc]" title={p.name}>
+//                     {p.name.substring(0, 2)}
+//                   </span>
+//                 ))}
+//               </div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
 
 const NorthIndianChart = ({ planets, ascendant, title }: { planets: any[], ascendant: number, title: string }) => {
   return (
