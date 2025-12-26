@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Demo Profile",
+    "gender": "male",
+    "dob": "01/01/2000",
+    "tob": "12:03 AM",
+    "location": "Greater Noida, Gautam Buddha Nagar, Uttar Pradesh, 201310, India",
+    "lat": 28.4670734,
+    "lon": 77.5137649
+  },
+  {
+    "name": "Persistence Test 2",
+    "gender": "male",
+    "dob": "01/01/1990",
+    "tob": "5:02 PM",
+    "location": "London, UK",
+    "lat": 51.5074,
+    "lon": -0.1278
+  },
+  {
+    "name": "Arjun Sharma",
+    "gender": "male",
+    "dob": "11/05/1963",
+    "tob": "2:02 PM",
+    "location": "Siwan, Bihar, India",
+    "lat": 26.131008,
+    "lon": 84.3910745
+  },
+  {
+    "name": "Test User",
+    "gender": "male",
+    "dob": "12/27/2002",
+    "tob": "9:49 PM",
+    "location": "Etah, Uttar Pradesh, India",
+    "lat": 27.5550357,
+    "lon": 78.5992221
+  },
+  {
+    "name": "Final Test User",
+    "gender": "female",
+    "dob": "12/25/1995",
+    "tob": "4:30 PM",
+    "location": "Greater London, England, United Kingdom",
+    "lat": 51.5074456,
+    "lon": -0.1277653
+  }
+]

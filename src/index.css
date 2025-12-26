@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Professional Palette (Practo-inspired) */
+  --color-bg-primary: #0f172a; /* Slate 900 */
+  --color-bg-secondary: #1e293b; /* Slate 800 */
+  --color-accent: #2563eb; /* Royal Blue */
+  --color-accent-hover: #1d4ed8; /* Darker Blue */
+  --color-text-primary: #f8fafc; /* Slate 50 */
+  --color-text-secondary: #94a3b8; /* Slate 400 */
+  --color-border: #334155; /* Slate 700 */
+  
+  --font-sans: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary); 
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border); 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent); 
+}
