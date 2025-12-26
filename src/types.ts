@@ -6,6 +6,7 @@ export interface BirthDetails {
     location: string;
     lat: number;
     lon: number;
+    id?: string;
 }
 
 export interface PlanetData {

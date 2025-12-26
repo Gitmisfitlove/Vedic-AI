@@ -29,6 +29,8 @@ import { CosmicView } from './components/CosmicView';
 import { HoloCard } from './components/HoloCard';
 import { calculateKundali, getSignName } from './engine/astroEngine';
 import { cn } from './utils/cn';
+import { db } from './config/firebase';
+import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 
 
@@ -585,14 +587,19 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch('/api/profiles')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setSavedProfiles(data);
-        }
-      })
-      .catch(err => console.error("Error fetching profiles:", err));
+    const fetchProfiles = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "profiles"));
+        const profiles: BirthDetails[] = [];
+        querySnapshot.forEach((doc) => {
+          profiles.push({ ...doc.data() as BirthDetails, id: doc.id });
+        });
+        setSavedProfiles(profiles);
+      } catch (err) {
+        console.error("Error fetching profiles:", err);
+      }
+    };
+    fetchProfiles();
   }, []);
 
   const showToast = (message: string, type: 'success' | 'error') => {
@@ -629,25 +636,17 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
     }
 
     try {
-      const res = await fetch('/api/profiles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
+      const docRef = await addDoc(collection(db, "profiles"), formData);
+      const newProfile = { ...formData, id: docRef.id };
 
-      const data = await res.json();
-      if (data.success) {
-        // Optimistically update or fetch again
-        const newProfiles = [...savedProfiles.filter(p => p.name !== formData.name), formData];
-        setSavedProfiles(newProfiles);
-        showToast('Profile saved successfully!', 'success');
-      } else {
-        showToast(data.message || 'Failed to save profile.', 'error');
-      }
+      const newProfiles = [...savedProfiles, newProfile];
+      setSavedProfiles(newProfiles);
+      showToast('Profile saved successfully!', 'success');
     } catch (err) {
       console.error(err);
-      showToast('Error connecting to server.', 'error');
+      showToast('Failed to save profile.', 'error');
     }
+
   };
 
   const loadProfile = (profile: BirthDetails) => {
@@ -660,20 +659,18 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
     setFormData({ ...profile, dob: displayDob });
   };
 
-  const deleteProfile = async (name: string, e: React.MouseEvent) => {
+  const deleteProfile = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const res = await fetch(`/api/profiles/${encodeURIComponent(name)}`, {
-        method: 'DELETE'
-      });
-      if (res.ok) {
-        const newProfiles = savedProfiles.filter(p => p.name !== name);
-        setSavedProfiles(newProfiles);
-      }
+      if (!id) return;
+      await deleteDoc(doc(db, "profiles", id));
+      const newProfiles = savedProfiles.filter(p => p.id !== id);
+      setSavedProfiles(newProfiles);
     } catch (err) {
-      console.error(err);
+      console.error("Error deleting profile:", err);
     }
   };
+
 
   const resetForm = () => {
     setFormData({
@@ -854,7 +851,7 @@ const BirthForm = ({ onSubmit }: { onSubmit: (data: BirthDetails) => void }) => 
                   <div className="text-[10px] text-gray-500">{p.dob} | {p.location}</div>
                 </div>
                 <button
-                  onClick={(e) => deleteProfile(p.name, e)}
+                  onClick={(e) => deleteProfile(p.id || '', e)}
                   className="p-2 hover:bg-red-500/20 rounded-lg text-gray-400 hover:text-red-500 transition-colors opacity-60 group-hover:opacity-100"
                   title="Delete Profile"
                 >
@@ -1094,8 +1091,8 @@ export const App = () => {
               <Compass className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-blue-400 to-blue-200 animate-shimmer">
-                Project V <span className="text-sm text-slate-500 font-normal tracking-widest uppercase ml-2">AstroPsych AI</span>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-blue-400 to-blue-200 animate-shimmer">
+                Project V <span className="text-xs md:text-sm text-slate-500 font-normal tracking-widest uppercase ml-2">AstroPsych AI</span>
               </h1>
             </div>
           </div>
